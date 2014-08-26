@@ -56,4 +56,18 @@ public class LoggerListAdapter extends BaseAdapter {
 	public void setData(ArrayList<LoggerItem> items) {
 		loggerListItems = items;
 	}
+	
+	public void addItem(LoggerItem item) {
+		if(loggerListItems == null) {
+			loggerListItems = new ArrayList<LoggerItem>();
+		}
+		loggerListItems.add(item);
+	}
+	
+	public void addItems(ArrayList<LoggerItem> itemsList) {
+		if(loggerListItems == null) {
+			loggerListItems = new ArrayList<LoggerItem>();
+		}
+		loggerListItems.addAll(itemsList);
+	}
 }

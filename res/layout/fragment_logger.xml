@@ -6,10 +6,11 @@
             android:id="@+id/logListView"
             android:scrollbars="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="200dip"
+            android:layout_height="fill_parent"
             android:layout_gravity="fill_vertical"
             android:layout_alignParentTop="true"
-            >
+            android:stackFromBottom="true"
+			android:transcriptMode="alwaysScroll">
         </ListView>
     
 
