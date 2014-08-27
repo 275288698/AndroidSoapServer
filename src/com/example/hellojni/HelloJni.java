@@ -19,6 +19,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 public class HelloJni implements Runnable {
+	public static final String LOG_TAG = "SoapServer";
 	
 	/*
 	 * this is used to load the 'hello-jni' library on application startup. The
@@ -47,8 +48,8 @@ public class HelloJni implements Runnable {
 	@Override
 	public void run() {
 		setAssetManager(assetMgr);
-		Log.i("HelloJni", "Running server");
+		Log.i(LOG_TAG, "Running server");
 		runServer();
-		Log.i("HelloJni", "Stopping server");
+		Log.i(LOG_TAG, "Stopping server");
 	}
 }

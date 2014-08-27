@@ -28,7 +28,7 @@ import edu.agh.wsserver.data.NavDrawerListAdapter;
 import edu.agh.wsserver.utils.ServerUtils;
 
 public class MainActivity extends FragmentActivity {
-	private static final String LOG_TAG = "SoapServer";
+	public static final String LOG_TAG = "MainActivity";
 	
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;

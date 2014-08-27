@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +46,17 @@ public class LoggerListAdapter extends BaseAdapter {
         }
 
         TextView txtHeader = (TextView) convertView.findViewById(R.id.logHeader);
+        TextView txtTag = (TextView) convertView.findViewById(R.id.logTag);
         TextView txtContent = (TextView) convertView.findViewById(R.id.logContent);
         
-        txtHeader.setText(loggerListItems.get(position).getLogHeader());
-        txtContent.setText(loggerListItems.get(position).getLogContent());
+        LoggerItem loggerItem = loggerListItems.get(position);
+        
+        txtHeader.setText(loggerItem.getLogHeader());
+        txtTag.setText(loggerItem.getLogTag());
+        txtContent.setText(loggerItem.getLogContent());
+        
+        //kolorek
+        convertView.setBackgroundColor(loggerItem.getLogColor());
         
 		return convertView;
 	}

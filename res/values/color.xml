@@ -8,4 +8,9 @@
     <color name="counter_text_color">#c5c4c4</color>
     <color name="logger_header">#303030</color>
     <color name="logger_content">#000000</color>
+    
+    <color name="logger_error">#cc3f3f</color>
+    <color name="logger_warn">#f28f00</color>
+    <color name="logger_debug">#ebebeb</color>
+    <color name="logger_info">#87c540</color>
 </resources>

@@ -22,7 +22,7 @@ import edu.agh.wsserver.activity.R;
 import edu.agh.wsserver.utils.ServerUtils;
 
 public class ServerActivityFragment extends Fragment {
-	private static final String LOG_TAG = "SoapServer";
+	public static final String LOG_TAG = "Server-screen";
 	
 	private HelloJni serverTask = null;
 
@@ -37,6 +37,8 @@ public class ServerActivityFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onCreateView START");
+        
 		final View rootView = inflater.inflate(R.layout.fragment_server,
 				container, false);
 		// Set up Start Server Buttons
@@ -56,7 +58,7 @@ public class ServerActivityFragment extends Fragment {
 				startServerButton.setEnabled(true);
 				stopServerButton.setEnabled(false);
 				
-				Log.d(LOG_TAG, "Trying to STOP server.");
+				Log.i(LOG_TAG, "Trying to STOP server.");
 				serverTask.stopServer();
 				isRunning = false;
 			}
@@ -70,7 +72,7 @@ public class ServerActivityFragment extends Fragment {
 				new GetLocalIpTask((TextView) rootView
 						.findViewById(R.id.ipTextView)).execute();
 
-				Log.d(LOG_TAG, "Trying to RUN server.");
+				Log.i(LOG_TAG, "Trying to RUN server.");
 				es.execute(serverTask);
 				isRunning = true;
 			}
@@ -84,6 +86,9 @@ public class ServerActivityFragment extends Fragment {
 		} else {
 			stopServerButton.setEnabled(false);
 		}
+		
+
+        Log.d(LOG_TAG, "onCreateView END");
 		return rootView;
 	}
 

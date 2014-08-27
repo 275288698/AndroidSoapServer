@@ -1,10 +1,14 @@
 package edu.agh.wsserver.utils;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,12 +18,74 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
+import dalvik.system.DexFile;
 
 public class ServerUtils {
-	private static final String LOG_TAG = "SoapServer";
+	public static final String LOG_TAG = "ServerUtils";
 
 	private ServerUtils(){}
+	
+	public static List<String> getApplicationLogTags(Context context, String logTagFieldName, String logPackageName) {
+		List<String> tags = new ArrayList<String>();
+		List<Class> clazzes = null;
+		
+		try {
+			clazzes = findClasses(context, logPackageName);
+		} catch (Exception e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		if(clazzes == null) {
+			return null;
+		}
+		
+		for(Class clazz : clazzes) {
+			Field fld = null;
+			try {
+				fld = clazz.getField(logTagFieldName);
+			} catch (NoSuchFieldException e) {
+				continue;
+			}
+			
+			Object staticObjValue = null;
+			try {
+				staticObjValue = fld.get(null);
+			} catch (Exception e) {
+				continue;
+			}
+		
+			if(staticObjValue != null && staticObjValue instanceof String) {
+				tags.add((String) staticObjValue);
+			}
+		}
+		return tags;
+	}
+
+	private static List<Class> findClasses(Context context, String logPackageName) {
+		List<Class> classes = new ArrayList<Class>();
+		try {
+	        DexFile df = new DexFile(context.getPackageCodePath());
+	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
+	            String s = iter.nextElement();
+	            if(s.startsWith(logPackageName)) {
+	            	Class clazz = null;
+	            	try {
+	            		clazz = Class.forName(s);
+	            	} catch (Exception e) {
+		            	continue;
+	            	}
+	            	
+	            	if(clazz != null) {
+	            		classes.add(clazz);
+	            	}
+	            }
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+		return classes;
+	}
 	
 	/**
 	 * Usuwa logi LogCata.

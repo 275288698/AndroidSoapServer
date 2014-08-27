@@ -19,7 +19,7 @@ import edu.agh.wsserver.data.LoggerListAdapter;
 import edu.agh.wsserver.logger.LoggerUpdater;
 
 public class LoggerActivityFragment extends Fragment {
-	private static final String LOG_TAG = "SoapServer";
+	public static final String LOG_TAG = "Logger-screen";
 	
 	private LoggerListAdapter loggerAdapter;
 	
@@ -35,11 +35,13 @@ public class LoggerActivityFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onCreateView START");
+        
 		final View rootView = inflater.inflate(R.layout.fragment_logger,
 				container, false);
 	
 		if(loggerTask == null && !isRunning) {
-	        Log.d(LOG_TAG, "Trying to RUN logger.");
+	        Log.i(LOG_TAG, "Trying to RUN logger.");
 
 			loggerAdapter = new LoggerListAdapter(getActivity().getApplicationContext(), new ArrayList<LoggerItem>());
 			
@@ -57,6 +59,7 @@ public class LoggerActivityFragment extends Fragment {
                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) { }
         });
         
+        Log.d(LOG_TAG, "onCreateView END");
 		return rootView;
 	}
 }
