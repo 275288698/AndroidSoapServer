@@ -2,9 +2,9 @@ package edu.agh.wsserver.data;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import edu.agh.wsserver.activity.R;
 
+@SuppressLint("InflateParams")
 public class LoggerListAdapter extends BaseAdapter {
 	
 	private Context context;

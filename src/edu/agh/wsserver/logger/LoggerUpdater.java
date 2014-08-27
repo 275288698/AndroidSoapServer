@@ -14,8 +14,10 @@ import edu.agh.wsserver.data.LoggerListAdapter;
 import edu.agh.wsserver.utils.ServerUtils;
 
 /**
- * Kazda klasa z (pod)pakietu "edu.agh.wsserver" posiadajaca pole public static final String LOG_TAG bedzie dodawana do outputa loggera.
- * Jesli nie chcemy, aby informacje z logow byly wyswietlane wystarczy ustawic pole LOG_TAG w tej klasie jako prywatne (lub je usunac)!
+ * Kazda klasa z (pod)pakietu "edu.agh.wsserver" posiadajaca pole 
+ * public static final String LOG_TAG bedzie dodawana do outputa loggera.
+ * Jesli nie chcemy, aby informacje z logow byly wyswietlane wystarczy 
+ * ustawic pole LOG_TAG w tej klasie jako prywatne (lub je usunac)!
  * 
  * @author krzysztof broncel
  *

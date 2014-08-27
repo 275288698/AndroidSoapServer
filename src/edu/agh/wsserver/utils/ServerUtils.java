@@ -27,6 +27,14 @@ public class ServerUtils {
 
 	private ServerUtils(){}
 	
+	/**
+	 * Wyszukuje wszystkie wartosci zmiennych statycznych o podanej nazwie, zdefiniowane w klasach z okreslonego pakietu.
+	 * @param context - kontekst aplikacji, zeby jakos dobrac sie do DEX
+	 * @param logTagFieldName - nazwa zmiennej statycznej (publicznej!!)
+	 * @param logPackageName - nazwa pakietu po ktorym szukamy
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
 	public static List<String> getApplicationLogTags(Context context, String logTagFieldName, String logPackageName) {
 		List<String> tags = new ArrayList<String>();
 		List<Class> clazzes = null;
@@ -62,6 +70,7 @@ public class ServerUtils {
 		return tags;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private static List<Class> findClasses(Context context, String logPackageName) {
 		List<Class> classes = new ArrayList<Class>();
 		try {
