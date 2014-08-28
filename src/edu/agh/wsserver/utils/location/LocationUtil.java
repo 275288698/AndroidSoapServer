@@ -15,7 +15,7 @@ public class LocationUtil {
 	private LocationUtil() {}
 	private static final LocationUtil instance = new LocationUtil();
 
-	private static final String LOG_TAG = "GetCurrentLocationUtil";
+	public static final String LOG_TAG = LocationUtil.class.getSimpleName();
 
 	private LocationManager locationManager = null;
 	private LocationListener locationListener = null;

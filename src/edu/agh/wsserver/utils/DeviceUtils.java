@@ -10,7 +10,7 @@ import android.util.Log;
 import edu.agh.wsserver.utils.dto.SensorDto;
 
 public class DeviceUtils {
-	private static final String LOG_TAG = "DeviceUtils";
+	public static final String LOG_TAG = DeviceUtils.class.getSimpleName();
 
 	private DeviceUtils(){}
 
