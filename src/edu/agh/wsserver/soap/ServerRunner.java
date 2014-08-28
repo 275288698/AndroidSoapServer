@@ -4,7 +4,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 public class ServerRunner implements Runnable {
-	private static final String LOG_TAG = ServerRunner.class.getSimpleName();
+	public static final String LOG_TAG = ServerRunner.class.getSimpleName();
 
 	/** Run GSoap server */
 	private native int runServer();

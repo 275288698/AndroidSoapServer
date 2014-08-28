@@ -20,6 +20,7 @@ void* process_request(void *soap);
 #define logD(msg) __android_log_write(ANDROID_LOG_DEBUG, APP_TAG, msg)
 #define Sensor ns__Sensor
 #define Location ns__Location
+#define WSDL_FILE_NAME "DeviceServices.wsdl"
 
 extern "C" {
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_runServer(JNIEnv* env, jobject thiz);
@@ -150,7 +151,7 @@ int http_get(struct soap *soap) {
 	if (!s || strcmp(s, "?wsdl")) {
 		return SOAP_GET_METHOD;
 	}
-	char* wsdl = readWsdl((char *) "DeviceServices.wsdl");
+	char* wsdl = readWsdl((char *) WSDL_FILE_NAME);
 	if (wsdl == JNI_FALSE) {
 		return 404; // return HTTP not found error
 	}
@@ -170,7 +171,7 @@ char* readWsdl(char* wsdlName) {
 		logE("_ASSET_NOT_FOUND_");
 		return JNI_FALSE;
 	} else {
-		logI("Asset read.");
+		logD("WSDL file successfully loaded.");
 	}
 	long size = AAsset_getLength(asset);
 	char* buffer = (char*) malloc(sizeof(char) * size + 1);
