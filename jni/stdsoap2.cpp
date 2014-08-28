@@ -50,7 +50,6 @@ compiling, linking, and/or using OpenSSL is allowed.
 A commercial use license is available from Genivia, Inc., contact@genivia.com
 --------------------------------------------------------------------------------
 */
-#include <android/log.h>
 
 #define GSOAP_LIB_VERSION 20817
 
@@ -3185,7 +3184,7 @@ soap_ssl_init()
     { char buf[1024];
       RAND_seed(buf, sizeof(buf));
       while (!RAND_status())
-      { int r = (int)lrand48();//rand();
+      { int r = rand();
         RAND_seed(&r, sizeof(int));
       }
     }
@@ -4761,15 +4760,13 @@ soap_bind(struct soap *soap, const char *host, int port, int backlog)
   int set = 1;
 #endif
   if (soap_valid_socket(soap->master))
-  {
-	soap->fclosesocket(soap, soap->master);
-	soap->master = SOAP_INVALID_SOCKET;
+  { soap->fclosesocket(soap, soap->master);
+    soap->master = SOAP_INVALID_SOCKET;
   }
   soap->socket = SOAP_INVALID_SOCKET;
   soap->errmode = 1;
   if (tcp_init(soap))
-  {
-	soap_set_receiver_error(soap, tcp_error(soap), "TCP init failed in soap_bind()", SOAP_TCP_ERROR);
+  { soap_set_receiver_error(soap, tcp_error(soap), "TCP init failed in soap_bind()", SOAP_TCP_ERROR);
     return SOAP_INVALID_SOCKET;
   }
 #ifdef WITH_IPV6
@@ -4777,9 +4774,7 @@ soap_bind(struct soap *soap, const char *host, int port, int backlog)
   hints.ai_family = PF_UNSPEC;
 #ifndef WITH_LEAN
   if ((soap->omode & SOAP_IO_UDP))
-  {
     hints.ai_socktype = SOCK_DGRAM;
-  }
   else
 #endif
     hints.ai_socktype = SOCK_STREAM;
@@ -4787,8 +4782,7 @@ soap_bind(struct soap *soap, const char *host, int port, int backlog)
   soap->errmode = 2;
   err = getaddrinfo(host, soap_int2s(soap, port), &hints, &addrinfo);
   if (err || !addrinfo)
-  {
-	soap_set_receiver_error(soap, SOAP_GAI_STRERROR(err), "getaddrinfo failed in soap_bind()", SOAP_TCP_ERROR);
+  { soap_set_receiver_error(soap, SOAP_GAI_STRERROR(err), "getaddrinfo failed in soap_bind()", SOAP_TCP_ERROR);
     return SOAP_INVALID_SOCKET;
   }
   res = *addrinfo;
@@ -16617,15 +16611,15 @@ soap_strerror(struct soap *soap)
   if (err)
   {
 #ifndef WIN32
-//# ifdef HAVE_STRERROR_R
+# ifdef HAVE_STRERROR_R
 //#  ifdef _GNU_SOURCE
-//   return strerror_r(err, soap->msgbuf, sizeof(soap->msgbuf)); /* GNU-specific */
+//    return strerror_r(err, soap->msgbuf, sizeof(soap->msgbuf)); /* GNU-specific */
 //#  else
     strerror_r(err, soap->msgbuf, sizeof(soap->msgbuf)); /* XSI-compliant */
 //#  endif
-//# else
+# else
     return strerror(err);
-//# endif
+# endif
 #else
 #ifndef UNDER_CE
     DWORD len;
@@ -16718,10 +16712,7 @@ SOAP_FMAC1
 int
 SOAP_FMAC2
 soap_set_receiver_error(struct soap *soap, const char *faultstring, const char *faultdetailXML, int soaperror)
-{
-	__android_log_write(ANDROID_LOG_INFO, "HelloJni", faultstring);
-	__android_log_write(ANDROID_LOG_INFO, "HelloJni", faultdetailXML);
-	return soap_set_error(soap, soap->version == 2 ? "SOAP-ENV:Receiver" : "SOAP-ENV:Server", NULL, faultstring, faultdetailXML, soaperror);
+{ return soap_set_error(soap, soap->version == 2 ? "SOAP-ENV:Receiver" : "SOAP-ENV:Server", NULL, faultstring, faultdetailXML, soaperror);
 }
 #endif
 

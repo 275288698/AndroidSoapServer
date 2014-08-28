@@ -659,7 +659,7 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #  endif
 #  ifndef WITH_LEAN
 #   ifdef HAVE_SYS_TIMEB_H
-#    //include <sys/timeb.h>		/* for ftime() */
+#    include <sys/timeb.h>		/* for ftime() */
 #   endif
 #   include <time.h>
 #  endif
@@ -2330,8 +2330,7 @@ SOAP_FMAC1 int SOAP_FMAC2 soap_rand(void);
 #elif defined(HAVE_RANDOM)
 # define soap_random (int)random()
 #else
-# define soap_random (int)lrand48()
-//# define soap_random rand()
+# define soap_random rand()
 #endif
 
 #ifdef WITH_NOIDREF

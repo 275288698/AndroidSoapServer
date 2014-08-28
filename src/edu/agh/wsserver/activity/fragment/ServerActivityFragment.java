@@ -16,15 +16,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.hellojni.HelloJni;
-
 import edu.agh.wsserver.activity.R;
+import edu.agh.wsserver.soap.ServerRunner;
 import edu.agh.wsserver.utils.ServerUtils;
 
 public class ServerActivityFragment extends Fragment {
 	public static final String LOG_TAG = "Server-screen";
-	
-	private HelloJni serverTask = null;
+
+	private ServerRunner serverRunner = null;
 
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 	private boolean isRunning = false;
@@ -33,33 +32,28 @@ public class ServerActivityFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onCreateView START");
-        
-		final View rootView = inflater.inflate(R.layout.fragment_server,
-				container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(LOG_TAG, "onCreateView START");
+
+		final View rootView = inflater.inflate(R.layout.fragment_server, container, false);
 		// Set up Start Server Buttons
-		final Button startServerButton = (Button) rootView
-				.findViewById(R.id.startServerButton);
-		final Button stopServerButton = (Button) rootView
-				.findViewById(R.id.stopServer);
-		
-		if(serverTask == null) {
-			serverTask = new HelloJni();
-			serverTask.setAssetMgr(this.getActivity().getAssets());
+		final Button startServerButton = (Button) rootView.findViewById(R.id.startServerButton);
+		final Button stopServerButton = (Button) rootView.findViewById(R.id.stopServer);
+
+		if (serverRunner == null) {
+			serverRunner = new ServerRunner(this.getActivity().getAssets());
 		}
-				
+
 		stopServerButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				startServerButton.setEnabled(true);
 				stopServerButton.setEnabled(false);
-				
+
 				Log.i(LOG_TAG, "Trying to STOP server.");
-				serverTask.stopServer();
+				serverRunner.stopServer();
 				isRunning = false;
 			}
 		});
@@ -69,26 +63,23 @@ public class ServerActivityFragment extends Fragment {
 			public void onClick(View v) {
 				stopServerButton.setEnabled(true);
 				startServerButton.setEnabled(false);
-				new GetLocalIpTask((TextView) rootView
-						.findViewById(R.id.ipTextView)).execute();
+				new GetLocalIpTask((TextView) rootView.findViewById(R.id.ipTextView)).execute();
 
 				Log.i(LOG_TAG, "Trying to RUN server.");
-				es.execute(serverTask);
+				es.execute(serverRunner);
 				isRunning = true;
 			}
 		});
-		
-		if(isRunning){
+
+		if (isRunning) {
 			stopServerButton.setEnabled(true);
 			startServerButton.setEnabled(false);
-			new GetLocalIpTask((TextView) rootView
-					.findViewById(R.id.ipTextView)).execute();
+			new GetLocalIpTask((TextView) rootView.findViewById(R.id.ipTextView)).execute();
 		} else {
 			stopServerButton.setEnabled(false);
 		}
-		
 
-        Log.d(LOG_TAG, "onCreateView END");
+		Log.d(LOG_TAG, "onCreateView END");
 		return rootView;
 	}
 

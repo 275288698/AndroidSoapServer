@@ -25,11 +25,23 @@ import edu.agh.wsserver.activity.fragment.ServerActivityFragment;
 import edu.agh.wsserver.activity.fragment.SettingsActivityFragment;
 import edu.agh.wsserver.data.NavDrawerItem;
 import edu.agh.wsserver.data.NavDrawerListAdapter;
+import edu.agh.wsserver.utils.DeviceUtils;
 import edu.agh.wsserver.utils.ServerUtils;
+import edu.agh.wsserver.utils.location.LocationUtil;
 
 public class MainActivity extends FragmentActivity {
 	public static final String LOG_TAG = "MainActivity";
-	
+
+	// loading native libs
+	static {
+		System.loadLibrary("stdc++");
+		System.loadLibrary("m");
+		System.loadLibrary("dl");
+		System.loadLibrary("c");
+		System.loadLibrary("gnustl_shared");
+		System.loadLibrary("soap_server");
+	}
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -49,6 +61,8 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         // czyscimy, po co nam stary syf
         ServerUtils.clearLogCat();
+        DeviceUtils.setContext(this);
+        LocationUtil.getInstance().init(this);
 
         Log.d(LOG_TAG, this.getClass().getSimpleName() + " init.");
 
