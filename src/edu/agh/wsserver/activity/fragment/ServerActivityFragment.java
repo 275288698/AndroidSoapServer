@@ -44,6 +44,7 @@ public class ServerActivityFragment extends Fragment {
 
 		if (serverRunner == null) {
 			serverRunner = new ServerRunner(this.getActivity().getAssets());
+			serverRunner.setServerPort(8080); // test
 		}
 
 		stopServerButton.setOnClickListener(new OnClickListener() {

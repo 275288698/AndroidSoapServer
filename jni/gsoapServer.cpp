@@ -17,6 +17,7 @@ void* process_request(void *soap);
 #define logI(msg) __android_log_write(ANDROID_LOG_INFO, APP_TAG, msg)
 #define logW(msg) __android_log_write(ANDROID_LOG_WARN, APP_TAG, msg)
 #define logE(msg) __android_log_write(ANDROID_LOG_ERROR, APP_TAG, msg)
+#define logD(msg) __android_log_write(ANDROID_LOG_DEBUG, APP_TAG, msg)
 #define Sensor ns__Sensor
 #define Location ns__Location
 
@@ -25,31 +26,52 @@ JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_runServer(JNIEnv*
 JNIEXPORT jboolean JNICALL Java_edu_agh_wsserver_soap_ServerRunner_stopServer(JNIEnv* env, jobject thiz);
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setAssetManager(JNIEnv* env, jobject thiz, jobject am);
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved);
+JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerPort(JNIEnv* env, jobject thiz, jint port);
 };
 
-bool isRunning = true;
+bool isRunning = false;
 AAssetManager* assetManager = NULL;
 static JavaVM *jvm;
 static jclass deviceUtilsClass;
 static jclass sensorDtoClass;
 static jclass locationUtilClass;
 static jclass locationDtoClass;
+int serverPort = 8080;
+
+JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerPort(JNIEnv* env, jobject thiz, jint port) {
+	char buff[100];
+	if (port >= 0 && port <= 65535) {
+		serverPort = port;
+		sprintf(buff, "Server port set to: %d", serverPort);
+		logI(buff);
+		return 0;
+	}
+	sprintf(buff, "Wrong port number: %d", port);
+	logW(buff);
+	return -1;
+}
 
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_runServer(JNIEnv* env, jobject thiz) {
+	if (isRunning) {
+		logW("Server already running. Cannot start another instance without stopping previous one.");
+		return -2;
+	}
+	isRunning = true;
 	char buff[200];
 	struct soap soap;
 	int m, s;
 	soap_init(&soap);
-	// soap.accept_timeout = 60; // die if no requests are made within 1 minute
 	soap.fget = http_get;
-	m = soap_bind(&soap, NULL, 8080, 100); // host MUST be NULL to be accessible from external network
+	soap.accept_timeout = 3;
+
+	m = soap_bind(&soap, NULL, serverPort, 100); // host MUST be NULL to be accessible from external network
 
 	if (m < 0) {
 		sprintf(buff, "Soap bind error status: %d", m);
 		logE(buff);
-		exit(-1);
+		return -1;
 	}
-	sprintf(buff, "Socket connection successful %d\n", m);
+	sprintf(buff, "Socket connection successful. Status: %d. Server running on port: %d", m, serverPort);
 	logI(buff);
 
 	struct soap *tsoap;
@@ -57,26 +79,24 @@ JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_runServer(JNIEnv*
 
 	for (int i = 1; isRunning == true; i++) {
 		s = soap_accept(&soap);
-		if (s < 0) {
-			exit(-1);
-		}
-		sprintf(buff, "%d: accepted %d IP=%d.%d.%d.%d ... ", i, s, (int) (soap.ip >> 24) & 0xFF, (int) (soap.ip >> 16) & 0xFF, (int) (soap.ip >> 8) & 0xFF, (int) soap.ip & 0xFF);
-		logI(buff);
+		if (s >= 0) {
+			sprintf(buff, "%d: accepted %d IP=%d.%d.%d.%d ... ", i, s, (int) (soap.ip >> 24) & 0xFF, (int) (soap.ip >> 16) & 0xFF, (int) (soap.ip >> 8) & 0xFF, (int) soap.ip & 0xFF);
+			logI(buff);
 
-		tsoap = soap_copy(&soap); // make a safe copy
-		if (!tsoap) {
-			logE("Error when making copy of soap struct.");
-			break;
+			tsoap = soap_copy(&soap); // make a safe copy
+			if (!tsoap) {
+				logE("Error when making copy of soap struct.");
+				break;
+			}
+			pthread_create(&tid, NULL, (void*(*)(void*))process_request, (void*)tsoap);
 		}
-		pthread_create(&tid, NULL, (void*(*)(void*))process_request, (void*)tsoap);
-
-		//soap_serve(&soap);	// process RPC skeletons
-		//sprintf(buff, "served\n");
-		//logI(buff);
-		//soap_destroy(&soap);
-		//soap_end(&soap);	// clean up
+//		else {
+//			sprintf(buff, "soap_accept() returned: %d. It could be caused by accept_timeout.", s);
+//			logD(buff);
+//		}
 	}
 	soap_done(&soap); // detach soap struct
+	logI("GSoap server stopped gracefully.");
 	return 0;
 }
 
@@ -126,10 +146,6 @@ void* process_request(void *soap) {
 }
 
 int http_get(struct soap *soap) {
-
-//	Sensor* sensors = getAvailableSensorsInfo(); //test
-//	Location* location = getCurrentDeviceLocation(); //test
-
 	char *s = strchr(soap->path, '?');
 	if (!s || strcmp(s, "?wsdl")) {
 		return SOAP_GET_METHOD;

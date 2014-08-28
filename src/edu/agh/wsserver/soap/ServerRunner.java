@@ -12,6 +12,8 @@ public class ServerRunner implements Runnable {
 	/** Stop GSoap server */
 	public native boolean stopServer();
 
+	public native int setServerPort(int port);
+
 	private native int setAssetManager(AssetManager assetManager);
 
 	/** Allows native code to read files from 'assets' directory */
@@ -25,7 +27,11 @@ public class ServerRunner implements Runnable {
 	public void run() {
 		setAssetManager(assetMgr);
 		Log.i(LOG_TAG, "Running server");
-		runServer();
-		Log.i(LOG_TAG, "Server stopped");
+		int res = runServer();
+		if (res < 0) {
+			Log.w(LOG_TAG, "runServer() returned error code: " + res + ". Probably server has not started properly.");
+		} else {
+			Log.i(LOG_TAG, "Server stopped properly");
+		}
 	}
 }
