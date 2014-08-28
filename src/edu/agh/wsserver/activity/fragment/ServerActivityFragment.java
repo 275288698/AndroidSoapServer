@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -15,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import edu.agh.wsserver.activity.R;
 import edu.agh.wsserver.soap.ServerRunner;
 import edu.agh.wsserver.utils.ServerUtils;
@@ -25,7 +25,7 @@ public class ServerActivityFragment extends Fragment {
 
 	private ServerRunner serverRunner = null;
 
-	private ExecutorService es = Executors.newSingleThreadExecutor();
+	private final ExecutorService es = Executors.newSingleThreadExecutor();
 	private boolean isRunning = false;
 
 	@Override
@@ -110,5 +110,23 @@ public class ServerActivityFragment extends Fragment {
 		protected void onPostExecute(String result) {
 			textView.setText(result);
 		}
+	}
+
+	public ServerRunner getServerRunner() {
+		return this.serverRunner;
+	}
+
+	@Override
+	public void onDestroy() {
+		if (serverRunner != null) {
+			serverRunner.stopServer();
+			es.shutdown();
+			try {
+				es.awaitTermination(3, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				Log.e(LOG_TAG, "Fragment destroying interrupted.", e);
+			}
+		}
+		super.onDestroy();
 	}
 }
