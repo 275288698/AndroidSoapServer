@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <schema targetNamespace="urn:DeviceServices"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="urn:DeviceServices"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="Sensor"><!-- ns__Sensor -->
+
+   <sequence>
+     <element name="mName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__Sensor::mName -->
+     <element name="mVendor" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__Sensor::mVendor -->
+     <element name="mVersion" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mVersion -->
+     <element name="mType" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mType -->
+     <element name="mMaxRange" type="xsd:float" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mMaxRange -->
+     <element name="mResolution" type="xsd:float" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mResolution -->
+     <element name="mPower" type="xsd:float" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mPower -->
+     <element name="mMinDelay" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mMinDelay -->
+   </sequence>
+  </complexType>
+  <!-- operation request element -->
+  <element name="getAvailableSensorsInfo">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="SensorArray">
+   <complexType>
+    <sequence>
+     <element name="sensors" type="ns:Sensor" minOccurs="0" maxOccurs="unbounded"/><!-- ns__SensorArray::__size -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getCurrentDeviceLocation">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="Location">
+   <complexType>
+    <sequence>
+     <element name="longitude" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__Location::longitude -->
+     <element name="latitude" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__Location::latitude -->
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+

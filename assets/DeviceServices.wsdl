@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="DeviceServices"
+ targetNamespace="http://localhost:8080/DeviceServices.wsdl"
+ xmlns:tns="http://localhost:8080/DeviceServices.wsdl"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:ns="urn:DeviceServices"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:HTTP="http://schemas.xmlsoap.org/wsdl/http/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="urn:DeviceServices"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns="urn:DeviceServices"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified">
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="Sensor"><!-- ns__Sensor -->
+
+   <sequence>
+     <element name="mName" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__Sensor::mName -->
+     <element name="mVendor" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__Sensor::mVendor -->
+     <element name="mVersion" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mVersion -->
+     <element name="mType" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mType -->
+     <element name="mMaxRange" type="xsd:float" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mMaxRange -->
+     <element name="mResolution" type="xsd:float" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mResolution -->
+     <element name="mPower" type="xsd:float" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mPower -->
+     <element name="mMinDelay" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mMinDelay -->
+   </sequence>
+  </complexType>
+  <!-- operation request element -->
+  <element name="getAvailableSensorsInfo">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="SensorArray">
+   <complexType>
+    <sequence>
+     <element name="sensors" type="ns:Sensor" minOccurs="0" maxOccurs="unbounded"/><!-- ns__SensorArray::__size -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getCurrentDeviceLocation">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="Location">
+   <complexType>
+    <sequence>
+     <element name="longitude" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__Location::longitude -->
+     <element name="latitude" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__Location::latitude -->
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+</types>
+
+<message name="getAvailableSensorsInfo">
+ <part name="Body" element="ns:getAvailableSensorsInfo"/><!-- ns__getAvailableSensorsInfo::ns__getAvailableSensorsInfo -->
+</message>
+
+<message name="SensorArray">
+ <part name="Body" element="ns:SensorArray"/><!-- ns__getAvailableSensorsInfo::sensors -->
+</message>
+
+<message name="getCurrentDeviceLocation">
+ <part name="Body" element="ns:getCurrentDeviceLocation"/><!-- ns__getCurrentDeviceLocation::ns__getCurrentDeviceLocation -->
+</message>
+
+<message name="Location">
+ <part name="Body" element="ns:Location"/><!-- ns__getCurrentDeviceLocation::location -->
+</message>
+
+<portType name="DeviceServicesPortType">
+ <operation name="getAvailableSensorsInfo">
+  <documentation>Service definition of function ns__getAvailableSensorsInfo</documentation>
+  <input message="tns:getAvailableSensorsInfo"/>
+  <output message="tns:SensorArray"/>
+ </operation>
+ <operation name="getCurrentDeviceLocation">
+  <documentation>Service definition of function ns__getCurrentDeviceLocation</documentation>
+  <input message="tns:getCurrentDeviceLocation"/>
+  <output message="tns:Location"/>
+ </operation>
+</portType>
+
+<binding name="DeviceServices" type="tns:DeviceServicesPortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="getAvailableSensorsInfo">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="getCurrentDeviceLocation">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="DeviceServices">
+ <documentation>gSOAP 2.8.17r generated service definition</documentation>
+ <port name="DeviceServices" binding="tns:DeviceServices">
+  <SOAP:address location="http://localhost:8080"/>
+ </port>
+</service>
+
+</definitions>
