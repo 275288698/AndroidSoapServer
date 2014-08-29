@@ -40,4 +40,8 @@
     <string name="portLabel">Server port number:</string>
     <string name="buttonApplySettings">Save changes</string>
     
+    <!-- Logger tab -->
+    <string name="logScrollSwitch">Autoscroll is</string>
+    <string name="logScrollEnabled">enabled</string>
+    <string name="logScrollDisabled">disabled</string>
 </resources>

@@ -3,15 +3,26 @@
     android:layout_height="match_parent" >
 
     <ListView
-            android:id="@+id/logListView"
-            android:scrollbars="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="fill_vertical"
-            android:layout_alignParentTop="true"
-            android:stackFromBottom="true"
-			android:transcriptMode="alwaysScroll">
-        </ListView>
-    
+        android:id="@+id/logListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_vertical"
+        android:scrollbars="vertical"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
+        android:layout_above="@+id/logScrollSwitch" />
+
+    <Switch
+        android:id="@+id/logScrollSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="fill_vertical"
+        android:layout_margin="7dp"
+        android:text="@string/logScrollSwitch"
+        android:textOff="@string/logScrollDisabled"
+        android:textOn="@string/logScrollEnabled"
+        android:thumb="@drawable/cst_thumb" />
 
 </RelativeLayout>
