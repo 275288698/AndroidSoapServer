@@ -23,6 +23,7 @@ public class ParamsActivityFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onCreateView START");
   
         final View rootView = inflater.inflate(R.layout.fragment_params, container, false);
           
@@ -68,7 +69,8 @@ public class ParamsActivityFragment extends Fragment {
 				applyChanges.setEnabled(false);
 			}
 		});
-        
+
+        Log.d(LOG_TAG, "onCreateView END");
         return rootView;
     }
 }

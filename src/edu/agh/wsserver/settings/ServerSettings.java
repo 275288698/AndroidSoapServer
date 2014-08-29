@@ -1,8 +1,12 @@
 package edu.agh.wsserver.settings;
 
+import android.util.Log;
+
 public class ServerSettings {
+    public static final String LOG_TAG = ServerSettings.class.getSimpleName();
+    
     private static volatile ServerSettings instance = null;
-	
+    
     private int serverPortNumber;
  
     private ServerSettings() {
@@ -27,5 +31,6 @@ public class ServerSettings {
 
 	public void setServerPortNumber(int serverPortNumber) {
 		this.serverPortNumber = serverPortNumber;
+        Log.d(LOG_TAG, "Port number has been changed: " + serverPortNumber);
 	}
 }

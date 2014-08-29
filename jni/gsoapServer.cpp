@@ -13,7 +13,7 @@ char* readWsdl(char* wsdlName);
 /** Processes request in separate thread */
 void* process_request(void *soap);
 
-#define APP_TAG "ServerRunner"
+#define APP_TAG "GSoapServer"
 #define logI(msg) __android_log_write(ANDROID_LOG_INFO, APP_TAG, msg)
 #define logW(msg) __android_log_write(ANDROID_LOG_WARN, APP_TAG, msg)
 #define logE(msg) __android_log_write(ANDROID_LOG_ERROR, APP_TAG, msg)

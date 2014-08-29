@@ -23,7 +23,7 @@ import android.util.Log;
 import dalvik.system.DexFile;
 
 public class ServerUtils {
-	public static final String LOG_TAG = "ServerUtils";
+	public static final String LOG_TAG = ServerUtils.class.getSimpleName();
 
 	private ServerUtils(){}
 	
@@ -55,15 +55,15 @@ public class ServerUtils {
 			} catch (NoSuchFieldException e) {
 				continue;
 			}
-			
+
 			Object staticObjValue = null;
 			try {
 				staticObjValue = fld.get(null);
 			} catch (Exception e) {
 				continue;
 			}
-		
-			if(staticObjValue != null && staticObjValue instanceof String) {
+
+			if (staticObjValue != null && staticObjValue instanceof String) {
 				tags.add((String) staticObjValue);
 			}
 		}

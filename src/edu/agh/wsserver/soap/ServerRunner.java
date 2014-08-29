@@ -31,7 +31,7 @@ public class ServerRunner implements Runnable {
 		if (res < 0) {
 			Log.w(LOG_TAG, "runServer() returned error code: " + res + ". Probably server has not started properly.");
 		} else {
-			Log.i(LOG_TAG, "Server stopped properly");
+			Log.i(LOG_TAG, "Server stopped properly.");
 		}
 	}
 }
