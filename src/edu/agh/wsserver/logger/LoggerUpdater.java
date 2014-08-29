@@ -19,11 +19,10 @@ import edu.agh.wsserver.utils.ServerUtils;
  * aby informacje z logow byly wyswietlane wystarczy ustawic pole LOG_TAG w tej
  * klasie jako prywatne (lub je usunac)!
  * 
- * @author krzysztof broncel
- *
  */
 public class LoggerUpdater extends Thread {
 	public static final String LOG_TAG = "Logger";
+	
 	private static final String LOGCAT_PATTERN = "[a-zA-Z]/.+:.+";
 	private static final String LOGCAT_SPLIT1 = "/";
 	private static final String LOGCAT_SPLIT2 = "\\(.+\\): ";
@@ -90,7 +89,8 @@ public class LoggerUpdater extends Thread {
 				}
 			}
 
-			/* uruchamiamy na watku macierzystym (dla tego Activity) */
+			/* uruchamiamy na watku macierzystym LoggerListAdaptera 
+			 * (tym, w ktorym zostala utworzona ta instancja) */
 			mainActivity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {

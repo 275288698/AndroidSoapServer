@@ -19,7 +19,7 @@ import edu.agh.wsserver.data.LoggerListAdapter;
 import edu.agh.wsserver.logger.LoggerUpdater;
 
 public class LoggerActivityFragment extends Fragment {
-	public static final String LOG_TAG = "Logger-screen";
+	public static final String LOG_TAG = LoggerActivityFragment.class.getSimpleName();
 	
 	private LoggerListAdapter loggerAdapter;
 	
@@ -45,8 +45,10 @@ public class LoggerActivityFragment extends Fragment {
 
 			loggerAdapter = new LoggerListAdapter(getActivity().getApplicationContext(), new ArrayList<LoggerItem>());
 			
-			/* troche spierdolone, ale dzieki temu watek moze uzyskac dostep do watku w ktorym odpalona zostala nasza Activity,
-			 * a co za tym idzie zapobiec wypierdalaniu CalledFromWrongThreadException przy update widoku */
+			/* Przekazanie biezacego obiektu Activity do LoggerUpdatera 
+			 * umozliwi wywolywanie metod aktualizujacych komponenty widoku
+			 * z poziomu ich macierzystego watku (tego, w ktorym zostaly utworzone)
+			 * Dzieki temu zapobiegamy CalledFromWrongThreadException przy update widoku */
 			loggerTask = new LoggerUpdater(loggerAdapter, getActivity());
 			      
 			es.execute(loggerTask);

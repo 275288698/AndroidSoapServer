@@ -22,7 +22,7 @@ import edu.agh.wsserver.soap.ServerRunner;
 import edu.agh.wsserver.utils.ServerUtils;
 
 public class ServerActivityFragment extends Fragment {
-	public static final String LOG_TAG = "Server-screen";
+	public static final String LOG_TAG = ServerActivityFragment.class.getSimpleName();
 
 	private ServerRunner serverRunner = null;
 

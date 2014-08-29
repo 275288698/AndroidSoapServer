@@ -132,28 +132,14 @@ public class MainActivity extends FragmentActivity {
     }
  
     /**
-     * Pokazuje odpowiednia zakladke
-	 * FIXME - chyba juz dziala dobrze 
+     * Shows chosen activity fragment.
      */
     private void displayView(int fragmentIndex) {
         Fragment fragment = fragmentsList.get(fragmentIndex);
- 
-       /* if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
- 
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(fragmentIndex, true);
-            mDrawerList.setSelection(fragmentIndex);
-            setTitle(navMenuTitles[fragmentIndex]);
-            mDrawerLayout.closeDrawer(mDrawerList);
-        } else {
-            // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
-        }*/
+        
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        
         if(fragment.isAdded()) {
             transaction.show(fragment);
         } else {
