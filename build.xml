@@ -53,7 +53,21 @@
             message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
             unless="sdk.dir"
     />
+	<fail
+            message="ndk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
+            unless="ndk.dir"
+    />
 
+	<target name="-pre-build">
+		<exec executable="${ndk.dir}/ndk-build.cmd" failonerror="true"/>
+	</target>
+
+	<target name="clean" depends="android_rules.clean">
+		<exec executable="${ndk.dir}/ndk-build.cmd" failonerror="true">
+			<arg value="clean"/>
+		</exec>
+	</target>
+	
     <!--
         Import per project custom build rules if present at the root of the project.
         This is the place to put custom intermediary targets such as:
