@@ -13,4 +13,17 @@
     <color name="logger_warn">#f28f00</color>
     <color name="logger_debug">#ebebeb</color>
     <color name="logger_info">#87c540</color>
+    
+	<color name="defaultText">#626262</color>
+	<color name="default_button_bg">#303030</color>
+	<color name="default_button_txt">#e5e4e4</color>
+	
+	<color name="gradient_from">#2B2B2B</color>
+	<color name="gradient_to">#1D1D1D</color>
+	
+	<color name="gradient_press_from">#992416</color>
+	<color name="gradient_press_to">#8B1608</color>
+	
+	<color name="gradient_inactive_from">#B3B2B2</color>
+	<color name="gradient_inactive_to">#A5A4A4</color>
 </resources>

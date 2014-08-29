@@ -18,6 +18,8 @@
 
     <Button
         android:id="@+id/startServerButton"
+        android:background="@drawable/cst_button"
+        android:textColor="@drawable/cst_button_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -26,9 +28,12 @@
 
     <Button
         android:id="@+id/stopServer"
+        android:background="@drawable/cst_button"
+        android:textColor="@drawable/cst_button_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/startServerButton"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:text="@string/stop_server" />
 

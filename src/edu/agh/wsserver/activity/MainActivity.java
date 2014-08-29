@@ -59,7 +59,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // czyscimy, po co nam stary syf
+
         ServerUtils.clearLogCat();
         DeviceUtils.setContext(this);
         LocationUtil.getInstance().init(this);

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.agh.wsserver.activity.R;
+import edu.agh.wsserver.settings.ServerSettings;
 import edu.agh.wsserver.soap.ServerRunner;
 import edu.agh.wsserver.utils.ServerUtils;
 
@@ -41,10 +42,10 @@ public class ServerActivityFragment extends Fragment {
 		// Set up Start Server Buttons
 		final Button startServerButton = (Button) rootView.findViewById(R.id.startServerButton);
 		final Button stopServerButton = (Button) rootView.findViewById(R.id.stopServer);
-
+		final TextView ipAddressText = (TextView) rootView.findViewById(R.id.ipTextView);
+		
 		if (serverRunner == null) {
 			serverRunner = new ServerRunner(this.getActivity().getAssets());
-			serverRunner.setServerPort(8080); // test
 		}
 
 		stopServerButton.setOnClickListener(new OnClickListener() {
@@ -52,7 +53,8 @@ public class ServerActivityFragment extends Fragment {
 			public void onClick(View v) {
 				startServerButton.setEnabled(true);
 				stopServerButton.setEnabled(false);
-
+				ipAddressText.setText(v.getResources().getString(R.string.ip_number));
+				
 				Log.i(LOG_TAG, "Trying to STOP server.");
 				serverRunner.stopServer();
 				isRunning = false;
@@ -64,9 +66,10 @@ public class ServerActivityFragment extends Fragment {
 			public void onClick(View v) {
 				stopServerButton.setEnabled(true);
 				startServerButton.setEnabled(false);
-				new GetLocalIpTask((TextView) rootView.findViewById(R.id.ipTextView)).execute();
+				new GetLocalIpTask(ipAddressText).execute();
 
 				Log.i(LOG_TAG, "Trying to RUN server.");
+				serverRunner.setServerPort(ServerSettings.getInstance().getServerPortNumber());
 				es.execute(serverRunner);
 				isRunning = true;
 			}
@@ -103,7 +106,7 @@ public class ServerActivityFragment extends Fragment {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			return ServerUtils.getLocalIP() + ":" + "8080";
+			return ServerUtils.getLocalIP() + ":" + ServerSettings.getInstance().getServerPortNumber();
 		}
 
 		@Override

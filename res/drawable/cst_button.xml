@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:startColor="@color/gradient_press_from"
+                android:endColor="@color/gradient_press_to"
+                android:angle="270" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/gradient_press_from" />
+            <corners
+                android:radius="3dp" />
+            <padding
+                android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+        </shape>
+    </item>
+
+    <item android:state_enabled="true">        
+        <shape>
+            <gradient
+                android:startColor="@color/gradient_from"
+                android:endColor="@color/gradient_to"
+                android:angle="270" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/gradient_from" />
+            <corners
+                android:radius="3dp" />
+            <padding
+                android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+        </shape>
+    </item>
+    
+     <item android:state_enabled="false">        
+        <shape>
+            <gradient
+                android:startColor="@color/gradient_inactive_from"
+                android:endColor="@color/gradient_inactive_to"
+                android:angle="270" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/gradient_inactive_from" />
+            <corners
+                android:radius="3dp" />
+            <padding
+                android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+        </shape>
+    </item>
+</selector>

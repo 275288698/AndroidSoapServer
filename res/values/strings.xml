@@ -10,11 +10,8 @@
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
     
-    <!-- Testowe teksty zakladek -->
-    <string name="menu_parameters">Parametry dotyczące dostępnych i udostępnianych usług na serwerze. Checkboxy z możliwością zaznaczenia, która usługa ma być dostępna.</string>
     <string name="menu_settings">Ustawienia dotyczące serwera jako usługodawcy - wykrywalność etc.</string>
     <string name="menu_security">Bezpieczeństwo - ograniczanie dostępu do serwera/usług.</string>
-    <string name="menu_logger">Logger (dane pobierane z LogCata) - informuje o wszystkich akcjach wykonywanych na serwerze - nowe połączenie, ewentualne błędy itp.</string>
     
     <!-- Menu -->
     <string-array name="nav_drawer_items">
@@ -36,4 +33,10 @@
      
     <!-- Content -->
     <string name="desc_list_item_icon">Item Icon</string>
+    
+    <!-- Parameters TAB -->
+    <string name="portHint">New port number</string>
+    <string name="portLabel">Server port number:</string>
+    <string name="buttonApplySettings">Save changes</string>
+    
 </resources>
