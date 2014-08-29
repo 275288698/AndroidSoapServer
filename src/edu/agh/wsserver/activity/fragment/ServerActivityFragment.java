@@ -43,6 +43,7 @@ public class ServerActivityFragment extends Fragment {
 		final Button startServerButton = (Button) rootView.findViewById(R.id.startServerButton);
 		final Button stopServerButton = (Button) rootView.findViewById(R.id.stopServer);
 		final TextView ipAddressText = (TextView) rootView.findViewById(R.id.ipTextView);
+		final TextView portTextView = (TextView) rootView.findViewById(R.id.portTextView);
 		
 		if (serverRunner == null) {
 			serverRunner = new ServerRunner(this.getActivity().getAssets());
@@ -53,7 +54,9 @@ public class ServerActivityFragment extends Fragment {
 			public void onClick(View v) {
 				startServerButton.setEnabled(true);
 				stopServerButton.setEnabled(false);
+				
 				ipAddressText.setText(v.getResources().getString(R.string.ip_number));
+				portTextView.setText(v.getResources().getString(R.string.port_number));
 				
 				Log.i(LOG_TAG, "Trying to STOP server.");
 				serverRunner.stopServer();
@@ -67,9 +70,10 @@ public class ServerActivityFragment extends Fragment {
 				stopServerButton.setEnabled(true);
 				startServerButton.setEnabled(false);
 				new GetLocalIpTask(ipAddressText).execute();
-
+				portTextView.setText(String.valueOf(ServerSettings.getInstance().getServerPortNumber()));
+				
 				Log.i(LOG_TAG, "Trying to RUN server.");
-				serverRunner.setServerPort(ServerSettings.getInstance().getServerPortNumber());
+				serverRunner.setCurrentServerPort(ServerSettings.getInstance().getServerPortNumber());
 				es.execute(serverRunner);
 				isRunning = true;
 			}
@@ -78,7 +82,8 @@ public class ServerActivityFragment extends Fragment {
 		if (isRunning) {
 			stopServerButton.setEnabled(true);
 			startServerButton.setEnabled(false);
-			new GetLocalIpTask((TextView) rootView.findViewById(R.id.ipTextView)).execute();
+			new GetLocalIpTask(ipAddressText).execute();
+			portTextView.setText(String.valueOf(serverRunner.getCurrentServerPort()));
 		} else {
 			stopServerButton.setEnabled(false);
 		}
@@ -106,7 +111,7 @@ public class ServerActivityFragment extends Fragment {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			return ServerUtils.getLocalIP() + ":" + ServerSettings.getInstance().getServerPortNumber();
+			return ServerUtils.getLocalIP();
 		}
 
 		@Override

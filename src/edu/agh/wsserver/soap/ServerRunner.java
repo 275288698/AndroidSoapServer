@@ -6,13 +6,15 @@ import android.util.Log;
 public class ServerRunner implements Runnable {
 	public static final String LOG_TAG = ServerRunner.class.getSimpleName();
 
+	private int currentServerPort;
+	
 	/** Run GSoap server */
 	private native int runServer();
 
 	/** Stop GSoap server */
 	public native boolean stopServer();
 
-	public native int setServerPort(int port);
+	private native int setServerPort(int port);
 
 	private native int setAssetManager(AssetManager assetManager);
 
@@ -33,5 +35,14 @@ public class ServerRunner implements Runnable {
 		} else {
 			Log.i(LOG_TAG, "Server stopped properly.");
 		}
+	}
+	
+	public int getCurrentServerPort() {
+		return this.currentServerPort;
+	}
+	
+	public void setCurrentServerPort(int serverPort) {
+		this.currentServerPort = serverPort;
+		setServerPort(serverPort);
 	}
 }

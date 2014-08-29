@@ -6,7 +6,8 @@
     <string name="start_server">Run server</string>
     <string name="stop_server">Stop server</string>
     <string name="ip_number">x.x.x.x</string>
-    
+    <string name="port_number">xxxx</string>
+    <string name="port_ip_separator">:</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
     

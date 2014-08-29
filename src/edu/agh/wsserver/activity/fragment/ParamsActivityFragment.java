@@ -47,7 +47,9 @@ public class ParamsActivityFragment extends Fragment {
 	            } else {
 	            	try {
 	            		Integer portNumber = Integer.parseInt(portNumberTxt.getText().toString());
-	            		if(portNumber > 1023 && portNumber <= 65535) {
+	            		if(portNumber.intValue() == ServerSettings.getInstance().getServerPortNumber()) {
+	            			applyChanges.setEnabled(false);
+	            		} else if (portNumber > 1023 && portNumber <= 65535) {
 	            			applyChanges.setEnabled(true);
 	            		} else {
 	    	            	portNumberTxt.setError("Enter an integer value from 1024 to 65535!");
