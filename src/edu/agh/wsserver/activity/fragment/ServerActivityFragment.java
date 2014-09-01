@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Fragment;
@@ -27,6 +28,7 @@ public class ServerActivityFragment extends Fragment {
 	private ServerRunner serverRunner = null;
 
 	private final ExecutorService es = Executors.newSingleThreadExecutor();
+	private Future<?> currentTask = null;
 	private boolean isRunning = false;
 
 	@Override
@@ -67,16 +69,20 @@ public class ServerActivityFragment extends Fragment {
 		startServerButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				stopServerButton.setEnabled(true);
-				startServerButton.setEnabled(false);
-				new GetLocalIpTask(ipAddressText).execute();
-				portTextView.setText(String.valueOf(ServerSettings.getInstance().getServerPortNumber()));
-				
-				Log.i(LOG_TAG, "Trying to RUN server.");
-				serverRunner.setCurrentServerPort(ServerSettings.getInstance().getServerPortNumber());
-				serverRunner.setThreadsPoolSize(ServerSettings.getInstance().getNumberOfThreads());
-				es.execute(serverRunner);
-				isRunning = true;
+				if (currentTask == null || currentTask.isDone()) {
+					stopServerButton.setEnabled(true);
+					startServerButton.setEnabled(false);
+					new GetLocalIpTask(ipAddressText).execute();
+					portTextView.setText(String.valueOf(ServerSettings.getInstance().getServerPortNumber()));
+					
+					Log.i(LOG_TAG, "Trying to RUN server.");
+					serverRunner.setCurrentServerPort(ServerSettings.getInstance().getServerPortNumber());
+					serverRunner.setThreadsPoolSize(ServerSettings.getInstance().getNumberOfThreads());
+					currentTask = es.submit(serverRunner);
+					isRunning = true;
+				} else {
+					Log.w(LOG_TAG, "Current server instance have not stopped yet. Try again after few seconds.");
+				}
 			}
 		});
 

@@ -16,7 +16,7 @@ import edu.agh.wsserver.settings.ServerSettings;
 
 public class ParamsActivityFragment extends Fragment {
 	public static final String LOG_TAG = ParamsActivityFragment.class.getSimpleName();
-		
+
 	public ParamsActivityFragment() {
 	}
 

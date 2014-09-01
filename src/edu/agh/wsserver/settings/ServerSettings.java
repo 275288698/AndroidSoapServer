@@ -11,7 +11,7 @@ public class ServerSettings {
     public static final int PORT_MIN = 1024;
     public static final int PORT_DEF = 8080;
     public static final int PORT_MAX = 65535;
-    
+
     private int serverPortNumber;
     private int numberOfThreads;
  
