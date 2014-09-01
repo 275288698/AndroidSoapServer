@@ -6,13 +6,6 @@
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 
-/** Implements server GET method */
-int http_get(struct soap *soap);
-/** Reads WSDL from file */
-char* readWsdl(char* wsdlName);
-/** Processes request in separate thread */
-void* process_request(void *soap);
-
 #define APP_TAG "GSoapServer"
 #define logI(msg) __android_log_write(ANDROID_LOG_INFO, APP_TAG, msg)
 #define logW(msg) __android_log_write(ANDROID_LOG_WARN, APP_TAG, msg)
@@ -21,6 +14,20 @@ void* process_request(void *soap);
 #define Sensor ns__Sensor
 #define Location ns__Location
 #define WSDL_FILE_NAME "DeviceServices.wsdl"
+#define MAX_THREADS_POOL_SIZE 50
+#define MAX_ALLOWED_PORT 65535
+#define MIN_ALLOWED_PORT 1024
+#define REQ_BACKLOG (500)
+#define USE_THREAD_POOL true
+
+/** Implements server GET method */
+int http_get(struct soap *soap);
+/** Reads WSDL from file */
+char* readWsdl(char* wsdlName);
+/** Processes request in separate thread */
+void* process_request(void *soap);
+int runServerWithoutThreadPool();
+int runServerWithThreadPool();
 
 extern "C" {
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_runServer(JNIEnv* env, jobject thiz);
@@ -28,20 +35,38 @@ JNIEXPORT jboolean JNICALL Java_edu_agh_wsserver_soap_ServerRunner_stopServer(JN
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setAssetManager(JNIEnv* env, jobject thiz, jobject am);
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved);
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerPort(JNIEnv* env, jobject thiz, jint port);
+JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerThreadsPoolSize(JNIEnv* env, jobject thiz, jint poolSize);
 };
 
-bool isRunning = false;
-AAssetManager* assetManager = NULL;
+/* Global variables */
+static bool isRunning = false;
+static bool serverStopped = true;
+static AAssetManager* assetManager = NULL;
 static JavaVM *jvm;
 static jclass deviceUtilsClass;
 static jclass sensorDtoClass;
 static jclass locationUtilClass;
 static jclass locationDtoClass;
-int serverPort = 8080;
+static int serverPort = 8080;
+static int threadsPoolSize = 10;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerThreadsPoolSize(JNIEnv* env, jobject thiz, jint poolSize) {
+	char buff[100];
+	if (poolSize > 0 && poolSize <= MAX_THREADS_POOL_SIZE) {
+		threadsPoolSize = poolSize;
+		sprintf(buff, "Threads pool size set to: %d", threadsPoolSize);
+		logI(buff);
+		return 0;
+	}
+	sprintf(buff, "Wrong threads pool size: %d", poolSize);
+	logW(buff);
+	return -1;
+}
 
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerPort(JNIEnv* env, jobject thiz, jint port) {
 	char buff[100];
-	if (port >= 0 && port <= 65535) {
+	if (port >= MIN_ALLOWED_PORT && port <= MAX_ALLOWED_PORT) {
 		serverPort = port;
 		sprintf(buff, "Server port set to: %d", serverPort);
 		logI(buff);
@@ -53,19 +78,30 @@ JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerPort(JNI
 }
 
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_runServer(JNIEnv* env, jobject thiz) {
-	if (isRunning) {
+	if (USE_THREAD_POOL) {
+		return runServerWithThreadPool();
+	} else {
+		return runServerWithoutThreadPool();
+	}
+}
+
+// multi-threaded server http://www.cs.fsu.edu/~engelen/soapdoc2.html#sec:mt
+int runServerWithoutThreadPool() {
+	if (!serverStopped) {
 		logW("Server already running. Cannot start another instance without stopping previous one.");
 		return -2;
 	}
 	isRunning = true;
+	serverStopped = false;
 	char buff[200];
 	struct soap soap;
 	int m, s;
 	soap_init(&soap);
+	soap.bind_flags = SO_REUSEADDR;
 	soap.fget = http_get;
 	soap.accept_timeout = 3;
 
-	m = soap_bind(&soap, NULL, serverPort, 100); // host MUST be NULL to be accessible from external network
+	m = soap_bind(&soap, NULL, serverPort, REQ_BACKLOG); // host MUST be NULL to be accessible from external network
 
 	if (m < 0) {
 		sprintf(buff, "Soap bind error status: %d", m);
@@ -96,8 +132,100 @@ JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_runServer(JNIEnv*
 //			logD(buff);
 //		}
 	}
+	soap_destroy(&soap);
+	soap_end(&soap);
 	soap_done(&soap); // detach soap struct
 	logI("GSoap server stopped gracefully.");
+	serverStopped = true;
+	return 0;
+}
+
+// multi-threaded server http://www.cs.fsu.edu/~engelen/soapdoc2.html#sec:mt
+int runServerWithThreadPool() {
+	if (!serverStopped) {
+		logW("Server already running. Cannot start another instance without stopping previous one.");
+		return -2;
+	}
+	isRunning = true;
+	serverStopped = false;
+	char buff[200];
+	char soapFaultBuff[1000];
+
+	int localThreadsPoolSize = threadsPoolSize;
+	struct soap soap;
+	soap_init(&soap);
+	soap.fget = http_get;
+	soap.bind_flags = SO_REUSEADDR;
+	soap.accept_timeout = 3;
+	struct soap *soap_thr[localThreadsPoolSize]; // each thread needs a runtime context
+	pthread_t tid[localThreadsPoolSize];
+	SOAP_SOCKET m, s;
+	int i;
+
+	m = soap_bind(&soap, NULL, serverPort, REQ_BACKLOG);
+	if (!soap_valid_socket(m)) {
+		sprintf(buff, "Soap bind error status: %d", m);
+		logE(buff);
+		return -1;
+	}
+	sprintf(buff, "Socket connection successful. Status: %d. Server running on port: %d", m, serverPort);
+	logI(buff);
+
+	for (i = 0; i < localThreadsPoolSize; i++) {
+		soap_thr[i] = NULL;
+	}
+
+	while (isRunning == true) {
+		for (i = 0; i < localThreadsPoolSize && isRunning == true; i++) {
+			s = soap_accept(&soap);
+			if (!soap_valid_socket(s)) {
+				if (soap.errnum) {
+					soap_print_fault(&soap, soapFaultBuff);
+					logW(soapFaultBuff);
+					continue; // retry
+				} else {
+//					sprintf(buff, "Server timed out");
+//					logW(buff);
+//					break;
+					continue;
+				}
+			}
+			sprintf(buff, "Thread %d accepts socket %d connection from IP %d.%d.%d.%d", i, s, (int) (soap.ip >> 24) & 0xFF, (int) (soap.ip >> 16) & 0xFF, (int) (soap.ip >> 8) & 0xFF,
+					(int) soap.ip & 0xFF);
+			logI(buff);
+			if (!soap_thr[i]) // first time around
+			{
+				soap_thr[i] = soap_copy(&soap);
+				if (!soap_thr[i]) {
+					sprintf(buff, "Critical error. Could not allocate memory for soap struct.");
+					logE(buff);
+					return -1; // could not allocate
+				}
+			} else { // recycle soap context
+				pthread_join(tid[i], NULL);
+				sprintf(buff, "Thread %d completed", i);
+				logI(buff);
+				soap_destroy(soap_thr[i]); // deallocate C++ data of old thread
+				soap_end(soap_thr[i]); // deallocate data of old thread
+			}
+			soap_thr[i]->socket = s; // new socket fd
+			pthread_create(&tid[i], NULL, (void*(*)(void*))process_request, (void*)soap_thr[i]);
+		}
+	}
+	for (i = 0; i < localThreadsPoolSize; i++) {
+		if (soap_thr[i]) {
+			soap_destroy(soap_thr[i]);
+			soap_end(soap_thr[i]);
+			soap_done(soap_thr[i]); // detach context
+			free(soap_thr[i]); // free up
+		}
+	}
+
+	soap_destroy(&soap);
+	soap_end(&soap);
+	soap_done(&soap); // detach soap struct
+	logI("GSoap server stopped gracefully.");
+	serverStopped = true;
 	return 0;
 }
 
@@ -139,10 +267,12 @@ void* process_request(void *soap) {
 	soap_serve((struct soap*) soap);
 	sprintf(buff, "Served. Thread ID: %lu", (long) id);
 	logI(buff);
-	soap_destroy((struct soap* )soap); // dealloc C++ data
-	soap_end((struct soap*) soap); // dealloc data and clean up
-	soap_done((struct soap*) soap); // detach soap struct
-	free(soap);
+	if (!USE_THREAD_POOL) {
+		soap_destroy((struct soap* )soap); // dealloc C++ data
+		soap_end((struct soap*) soap); // dealloc data and clean up
+		soap_done((struct soap*) soap); // detach soap struct
+		free(soap);
+	}
 	return NULL;
 }
 
@@ -159,6 +289,7 @@ int http_get(struct soap *soap) {
 	soap_response(soap, SOAP_FILE);
 	soap_send(soap, wsdl);
 	soap_end_send(soap);
+	free(wsdl);
 	return SOAP_OK;
 }
 
@@ -166,6 +297,7 @@ char* readWsdl(char* wsdlName) {
 	if (assetManager == NULL) {
 		return JNI_FALSE;
 	}
+	pthread_mutex_lock(&mutex);
 	AAsset* asset = AAssetManager_open(assetManager, wsdlName, AASSET_MODE_UNKNOWN);
 	if (NULL == asset) {
 		logE("_ASSET_NOT_FOUND_");
@@ -178,6 +310,7 @@ char* readWsdl(char* wsdlName) {
 	AAsset_read(asset, buffer, size);
 	buffer[size] = '\0'; // to remove some junk at the end, NOTE '+ 1' above
 	AAsset_close(asset);
+	pthread_mutex_unlock(&mutex);
 	return buffer;
 }
 

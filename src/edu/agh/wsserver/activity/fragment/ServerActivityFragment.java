@@ -74,6 +74,7 @@ public class ServerActivityFragment extends Fragment {
 				
 				Log.i(LOG_TAG, "Trying to RUN server.");
 				serverRunner.setCurrentServerPort(ServerSettings.getInstance().getServerPortNumber());
+				serverRunner.setThreadsPoolSize(ServerSettings.getInstance().getNumberOfThreads());
 				es.execute(serverRunner);
 				isRunning = true;
 			}

@@ -2615,7 +2615,8 @@ SOAP_FMAC1 int SOAP_FMAC2 soap_send_fault(struct soap*);
 SOAP_FMAC1 int SOAP_FMAC2 soap_recv_fault(struct soap*, int check);
 
 #ifndef WITH_NOSTDLIB
-SOAP_FMAC1 void SOAP_FMAC2 soap_print_fault(struct soap*, FILE*);
+//SOAP_FMAC1 void SOAP_FMAC2 soap_print_fault(struct soap*, FILE*);
+SOAP_FMAC1 void SOAP_FMAC2 soap_print_fault(struct soap*, char*);
 SOAP_FMAC1 void SOAP_FMAC2 soap_print_fault_location(struct soap*, FILE*);
 # ifndef WITH_LEAN
 #  ifndef WITH_COMPAT

@@ -16777,9 +16777,10 @@ soap_receiver_fault_subcode(struct soap *soap, const char *faultsubcodeQName, co
 SOAP_FMAC1
 void
 SOAP_FMAC2
-soap_print_fault(struct soap *soap, FILE *fd)
+//soap_print_fault(struct soap *soap, FILE *fd)
+soap_print_fault(struct soap *soap, char *buff)
 { if (soap_check_state(soap))
-    fprintf(fd, "Error: soap struct state not initialized\n");
+    sprintf(buff, "Error: soap struct state not initialized\n");
   else if (soap->error)
   { const char **c, *v = NULL, *s, *d;
     c = soap_faultcode(soap);
@@ -16789,7 +16790,7 @@ soap_print_fault(struct soap *soap, FILE *fd)
       v = soap_check_faultsubcode(soap);
     s = *soap_faultstring(soap);
     d = soap_check_faultdetail(soap);
-    fprintf(fd, "%s%d fault: %s [%s]\n\"%s\"\nDetail: %s\n", soap->version ? "SOAP 1." : "Error ", soap->version ? (int)soap->version : soap->error, *c, v ? v : "no subcode", s ? s : "[no reason]", d ? d : "[no detail]");
+    sprintf(buff, "%s%d fault: %s [%s]\n\"%s\"\nDetail: %s\n", soap->version ? "SOAP 1." : "Error ", soap->version ? (int)soap->version : soap->error, *c, v ? v : "no subcode", s ? s : "[no reason]", d ? d : "[no detail]");
   }
 }
 #endif

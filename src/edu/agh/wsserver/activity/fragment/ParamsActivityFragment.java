@@ -1,8 +1,5 @@
 package edu.agh.wsserver.activity.fragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,7 +16,8 @@ import edu.agh.wsserver.settings.ServerSettings;
 
 public class ParamsActivityFragment extends Fragment {
 	public static final String LOG_TAG = ParamsActivityFragment.class.getSimpleName();
-	
+	private static final int MAX_THREADS_POOL_SIZE = 50;
+
 	public ParamsActivityFragment() {
 	}
 
@@ -85,10 +83,10 @@ public class ParamsActivityFragment extends Fragment {
 	            } else {
 	            	try {
 	            		Integer threadsCnt = Integer.parseInt(threadsNumberTxt.getText().toString());
-	            		if (threadsCnt > 0 && threadsCnt <= 100) { // TODO - ustalic jakies wartosci
+	            		if (threadsCnt > 0 && threadsCnt <= MAX_THREADS_POOL_SIZE) {
 	            			applyChanges.setEnabled(true);
 	            		} else {
-	            			threadsNumberTxt.setError("Enter an integer value from 1 to 100!");
+	            			threadsNumberTxt.setError("Enter an integer value from 1 to " + MAX_THREADS_POOL_SIZE + "!");
 	            		}
 	            	} catch (Exception e) {
 	            		Log.e(LOG_TAG, "Number of threads must be an integer value!", e);

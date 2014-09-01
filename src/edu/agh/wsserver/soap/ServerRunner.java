@@ -6,8 +6,9 @@ import android.util.Log;
 public class ServerRunner implements Runnable {
 	public static final String LOG_TAG = ServerRunner.class.getSimpleName();
 
-	private int currentServerPort;
-	
+	private int currentServerPort = 8080;
+	private int threadsPoolSize = 10;
+
 	/** Run GSoap server */
 	private native int runServer();
 
@@ -15,6 +16,7 @@ public class ServerRunner implements Runnable {
 	public native boolean stopServer();
 
 	private native int setServerPort(int port);
+	private native int setServerThreadsPoolSize(int size);
 
 	private native int setAssetManager(AssetManager assetManager);
 
@@ -44,5 +46,14 @@ public class ServerRunner implements Runnable {
 	public void setCurrentServerPort(int serverPort) {
 		this.currentServerPort = serverPort;
 		setServerPort(serverPort);
+	}
+
+	public int getThreadsPoolSize() {
+		return threadsPoolSize;
+	}
+
+	public void setThreadsPoolSize(int threadsPoolSize) {
+		this.threadsPoolSize = threadsPoolSize;
+		setServerThreadsPoolSize(threadsPoolSize);
 	}
 }
