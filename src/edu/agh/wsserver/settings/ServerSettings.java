@@ -8,10 +8,12 @@ public class ServerSettings {
     private static volatile ServerSettings instance = null;
     
     private int serverPortNumber;
+    private int numberOfThreads;
  
     private ServerSettings() {
     	/* default values */
     	setServerPortNumber(8080);
+    	setNumberOfThreads(10);
     }
  
     public static ServerSettings getInstance() {
@@ -32,5 +34,14 @@ public class ServerSettings {
 	public void setServerPortNumber(int serverPortNumber) {
 		this.serverPortNumber = serverPortNumber;
         Log.d(LOG_TAG, "Port number has been changed: " + serverPortNumber);
+	}
+
+	public int getNumberOfThreads() {
+		return numberOfThreads;
+	}
+
+	public void setNumberOfThreads(int numberOfThreads) {
+		this.numberOfThreads = numberOfThreads;
+        Log.d(LOG_TAG, "Number of threads has been changed: " + numberOfThreads);
 	}
 }

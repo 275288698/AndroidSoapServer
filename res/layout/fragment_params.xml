@@ -23,6 +23,28 @@
         android:hint="@string/portHint"
         android:inputType="number" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/threadsNumberLabel"
+        android:layout_below="@+id/portNumber"
+        android:textColor="@color/defaultText"
+        android:textStyle="bold"
+        android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/threadsNumber"
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView2"
+        android:layout_marginRight="10dp"
+        android:ems="10"
+        android:hint="@string/threadsNumberHint"
+        android:inputType="number" />
+    
     <Button
         android:id="@+id/buttonApplySettings"
         android:background="@drawable/cst_button"
