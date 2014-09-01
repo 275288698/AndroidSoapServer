@@ -20,9 +20,9 @@
         android:layout_alignParentLeft="true"
         android:layout_gravity="fill_vertical"
         android:layout_margin="7dp"
-        android:text="@string/logScrollSwitch"
-        android:textOff="@string/logScrollDisabled"
-        android:textOn="@string/logScrollEnabled"
-        android:thumb="@drawable/cst_thumb" />
+        android:text="@string/log_scroll_switch"
+        android:textOff="@string/log_scroll_disabled"
+        android:textOn="@string/log_scroll_enabled"
+        android:thumb="@drawable/cst_thumb"/>
 
 </RelativeLayout>

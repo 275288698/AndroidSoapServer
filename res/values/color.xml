@@ -26,4 +26,6 @@
 	
 	<color name="gradient_inactive_from">#B3B2B2</color>
 	<color name="gradient_inactive_to">#A5A4A4</color>
+	
+	<color name="white">#FFFFFF</color>
 </resources>

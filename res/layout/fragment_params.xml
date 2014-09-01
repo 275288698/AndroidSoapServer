@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="@string/portLabel"
+        android:text="@string/port_label"
         android:textColor="@color/defaultText"
         android:textStyle="bold"
         android:textSize="17sp" />
@@ -20,7 +20,7 @@
         android:layout_below="@+id/textView1"
         android:layout_marginRight="10dp"
         android:ems="10"
-        android:hint="@string/portHint"
+        android:hint="@string/port_hint"
         android:inputType="number" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="@string/threadsNumberLabel"
+        android:text="@string/threads_number_label"
         android:layout_below="@+id/portNumber"
         android:textColor="@color/defaultText"
         android:textStyle="bold"
@@ -42,7 +42,7 @@
         android:layout_below="@+id/textView2"
         android:layout_marginRight="10dp"
         android:ems="10"
-        android:hint="@string/threadsNumberHint"
+        android:hint="@string/threads_number_hint"
         android:inputType="number" />
     
     <Button
@@ -54,6 +54,6 @@
         android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/buttonApplySettings" />
+        android:text="@string/button_apply_settings" />
 
 </RelativeLayout>

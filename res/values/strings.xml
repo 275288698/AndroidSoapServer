@@ -11,8 +11,8 @@
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
     
-    <string name="menu_settings">Ustawienia dotyczące serwera jako usługodawcy - wykrywalność etc.</string>
-    <string name="menu_security">Bezpieczeństwo - ograniczanie dostępu do serwera/usług.</string>
+    <string name="menu_settings">Application settings</string>
+    <string name="menu_security">Server security</string>
     
     <!-- Menu -->
     <string-array name="nav_drawer_items">
@@ -36,15 +36,15 @@
     <string name="desc_list_item_icon">Item Icon</string>
     
     <!-- Parameters TAB -->
-    <string name="portHint">New port number</string>
-    <string name="portLabel">Server port number:</string>
-    <string name="threadsNumberHint">New number of threads</string>
-    <string name="threadsNumberLabel">Maximum number of threads allowed:</string>
-    <string name="buttonApplySettings">Save changes</string>
+    <string name="port_hint">New port number</string>
+    <string name="port_label">Server port number:</string>
+    <string name="threads_number_hint">New number of threads</string>
+    <string name="threads_number_label">Maximum number of threads allowed:</string>
+    <string name="button_apply_settings">Save changes</string>
     
     <!-- Logger tab -->
-    <string name="logScrollSwitch">Autoscroll is</string>
-    <string name="logScrollEnabled">enabled</string>
-    <string name="logScrollDisabled">disabled</string>
+    <string name="log_scroll_switch">Autoscroll is</string>
+    <string name="log_scroll_enabled">enabled</string>
+    <string name="log_scroll_disabled">disabled</string>
     
 </resources>
