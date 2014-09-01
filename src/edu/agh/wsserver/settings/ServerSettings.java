@@ -4,16 +4,23 @@ import android.util.Log;
 
 public class ServerSettings {
     public static final String LOG_TAG = ServerSettings.class.getSimpleName();
-    
-    private static volatile ServerSettings instance = null;
+
+    public static final int THREADS_MIN = 1;
+    public static final int THREADS_DEF = 10;
+    public static final int THREADS_MAX = 50;
+    public static final int PORT_MIN = 1024;
+    public static final int PORT_DEF = 8080;
+    public static final int PORT_MAX = 65535;
     
     private int serverPortNumber;
     private int numberOfThreads;
  
+    private static volatile ServerSettings instance = null;
+    
     private ServerSettings() {
     	/* default values */
-    	setServerPortNumber(8080);
-    	setNumberOfThreads(10);
+    	setServerPortNumber(PORT_DEF);
+    	setNumberOfThreads(THREADS_DEF);
     }
  
     public static ServerSettings getInstance() {

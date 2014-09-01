@@ -1,8 +1,5 @@
 package edu.agh.wsserver.activity.fragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,7 +16,7 @@ import edu.agh.wsserver.settings.ServerSettings;
 
 public class ParamsActivityFragment extends Fragment {
 	public static final String LOG_TAG = ParamsActivityFragment.class.getSimpleName();
-	
+		
 	public ParamsActivityFragment() {
 	}
 
@@ -47,23 +44,7 @@ public class ParamsActivityFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-	            if (portNumberTxt.getText().toString().length() <= 0) {
-	            	portNumberTxt.setError("Port number cannot be empty!");
-	            } else {
-	            	try {
-	            		Integer portNumber = Integer.parseInt(portNumberTxt.getText().toString());
-	            		if(portNumber.intValue() == ServerSettings.getInstance().getServerPortNumber()) {
-	            			applyChanges.setEnabled(false);
-	            		} else if (portNumber > 1023 && portNumber <= 65535) {
-	            			applyChanges.setEnabled(true);
-	            		} else {
-	    	            	portNumberTxt.setError("Enter an integer value from 1024 to 65535!");
-	            		}
-	            	} catch (Exception e) {
-	            		Log.e(LOG_TAG, "Port number value must be an integer!", e);
-	            		portNumberTxt.setError("Port number value must be an integer!");
-	            	}
-	            }
+            	applyChanges.setEnabled(validateFields(rootView));
             }
          });
         
@@ -80,21 +61,7 @@ public class ParamsActivityFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-	            if (threadsNumberTxt.getText().toString().length() <= 0) {
-	            	threadsNumberTxt.setError("Number of threads cannot be empty!");
-	            } else {
-	            	try {
-	            		Integer threadsCnt = Integer.parseInt(threadsNumberTxt.getText().toString());
-	            		if (threadsCnt > 0 && threadsCnt <= 100) { // TODO - ustalic jakies wartosci
-	            			applyChanges.setEnabled(true);
-	            		} else {
-	            			threadsNumberTxt.setError("Enter an integer value from 1 to 100!");
-	            		}
-	            	} catch (Exception e) {
-	            		Log.e(LOG_TAG, "Number of threads must be an integer value!", e);
-	            		threadsNumberTxt.setError("Number of threads must be an integer value!");
-	            	}
-	            }
+            	applyChanges.setEnabled(validateFields(rootView));
             }
          });
         
@@ -103,11 +70,16 @@ public class ParamsActivityFragment extends Fragment {
         applyChanges.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// FIXME ! bug
 				Integer portNumber = Integer.parseInt(portNumberTxt.getText().toString());
-				ServerSettings.getInstance().setServerPortNumber(portNumber);
+				if(ServerSettings.getInstance().getServerPortNumber() != portNumber) {
+					ServerSettings.getInstance().setServerPortNumber(portNumber);
+				}
+				
 				Integer threadsNumber = Integer.parseInt(threadsNumberTxt.getText().toString());
-				ServerSettings.getInstance().setNumberOfThreads(threadsNumber);
+				if(ServerSettings.getInstance().getNumberOfThreads() != threadsNumber) {
+					ServerSettings.getInstance().setNumberOfThreads(threadsNumber);
+				}
+				
 				applyChanges.setEnabled(false);
 			}
 		});
@@ -115,4 +87,40 @@ public class ParamsActivityFragment extends Fragment {
         Log.d(LOG_TAG, "onCreateView END");
         return rootView;
     }
+	
+	private boolean validateFields(View rootView) {
+        final EditText portNumberTxt = (EditText) rootView.findViewById(R.id.portNumber);
+        final EditText threadsNumberTxt = (EditText) rootView.findViewById(R.id.threadsNumber);
+		
+        boolean returnFlag = true;
+
+        if(! validateNumberField(threadsNumberTxt, ServerSettings.THREADS_MIN, ServerSettings.THREADS_MAX)) {
+        	returnFlag = false;
+        }
+		if(! validateNumberField(portNumberTxt, ServerSettings.PORT_MIN, ServerSettings.PORT_MAX)) {
+			returnFlag = false;
+		}
+		
+		return returnFlag;
+	}
+	
+	private boolean validateNumberField(EditText field, int minVal, int maxVal) {
+		if (field.getText().toString().length() <= 0) {
+			field.setError("Field cannot be empty!");
+        } else {
+        	try {
+        		Integer threadsCnt = Integer.parseInt(field.getText().toString());
+        		if (threadsCnt >= minVal && threadsCnt <= maxVal) {
+        			field.setError(null);
+        			return true;
+        		} else {
+        			field.setError("Enter an integer value from " + minVal + " to " + maxVal + "!");
+        		}
+        	} catch (Exception e) {
+        		Log.e(LOG_TAG, "Field value must be an integer!", e);
+        		field.setError("Field value must be an integer!");
+        	}
+        }
+		return false;
+	}
 }

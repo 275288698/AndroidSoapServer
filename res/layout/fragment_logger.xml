@@ -23,6 +23,7 @@
         android:text="@string/logScrollSwitch"
         android:textOff="@string/logScrollDisabled"
         android:textOn="@string/logScrollEnabled"
-        android:thumb="@drawable/cst_thumb" />
+        android:thumb="@drawable/cst_thumb" 
+        android:textColor="@color/white"/>
 
 </RelativeLayout>
