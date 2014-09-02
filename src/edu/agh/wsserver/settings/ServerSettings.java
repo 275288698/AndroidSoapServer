@@ -6,7 +6,7 @@ public class ServerSettings {
     public static final String LOG_TAG = ServerSettings.class.getSimpleName();
 
     public static final int THREADS_MIN = 1;
-    public static final int THREADS_DEF = 10;
+    public static final int THREADS_DEF = 25;
     public static final int THREADS_MAX = 50;
     public static final int PORT_MIN = 1024;
     public static final int PORT_DEF = 8080;

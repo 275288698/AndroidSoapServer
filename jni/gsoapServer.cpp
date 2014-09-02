@@ -48,7 +48,7 @@ static jclass sensorDtoClass;
 static jclass locationUtilClass;
 static jclass locationDtoClass;
 static int serverPort = 8080;
-static int threadsPoolSize = 10;
+static int threadsPoolSize = 25;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 JNIEXPORT jint JNICALL Java_edu_agh_wsserver_soap_ServerRunner_setServerThreadsPoolSize(JNIEnv* env, jobject thiz, jint poolSize) {
@@ -132,8 +132,8 @@ int runServerWithoutThreadPool() {
 //			logD(buff);
 //		}
 	}
-	soap_destroy(&soap);
-	soap_end(&soap);
+//	soap_destroy(&soap);
+//	soap_end(&soap);
 	soap_done(&soap); // detach soap struct
 	logI("GSoap server stopped gracefully.");
 	serverStopped = true;
@@ -168,7 +168,7 @@ int runServerWithThreadPool() {
 		logE(buff);
 		return -1;
 	}
-	sprintf(buff, "Socket connection successful. Status: %d. Server running on port: %d", m, serverPort);
+	sprintf(buff, "Socket connection successful. Status: %d. Server running on port: %d. Threads pool size: %d", m, serverPort, localThreadsPoolSize);
 	logI(buff);
 
 	for (i = 0; i < localThreadsPoolSize; i++) {
@@ -214,15 +214,15 @@ int runServerWithThreadPool() {
 	}
 	for (i = 0; i < localThreadsPoolSize; i++) {
 		if (soap_thr[i]) {
-			soap_destroy(soap_thr[i]);
-			soap_end(soap_thr[i]);
+//			soap_destroy(soap_thr[i]);
+//			soap_end(soap_thr[i]);
 			soap_done(soap_thr[i]); // detach context
 			free(soap_thr[i]); // free up
 		}
 	}
 
-	soap_destroy(&soap);
-	soap_end(&soap);
+//	soap_destroy(&soap);
+//	soap_end(&soap);
 	soap_done(&soap); // detach soap struct
 	logI("GSoap server stopped gracefully.");
 	serverStopped = true;
