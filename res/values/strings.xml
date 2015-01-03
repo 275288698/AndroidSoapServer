@@ -46,5 +46,10 @@
     <string name="log_scroll_switch">Autoscroll is</string>
     <string name="log_scroll_enabled">enabled</string>
     <string name="log_scroll_disabled">disabled</string>
+
+    <!-- Settings tab -->
+    <string name="main_server_ip_label">Main server IP address:</string>
+    <string name="main_server_ip_hint">x.x.x.x</string>
+    <string name="main_server_port_label">Main server port:</string>
     
 </resources>
