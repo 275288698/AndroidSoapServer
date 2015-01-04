@@ -25,6 +25,7 @@ import edu.agh.wsserver.activity.fragment.ServerActivityFragment;
 import edu.agh.wsserver.activity.fragment.SettingsActivityFragment;
 import edu.agh.wsserver.data.NavDrawerItem;
 import edu.agh.wsserver.data.NavDrawerListAdapter;
+import edu.agh.wsserver.mainserver.MainServerConnector;
 import edu.agh.wsserver.utils.DeviceUtils;
 import edu.agh.wsserver.utils.ServerUtils;
 import edu.agh.wsserver.utils.location.LocationUtil;
@@ -63,6 +64,7 @@ public class MainActivity extends FragmentActivity {
         ServerUtils.clearLogCat();
         DeviceUtils.setContext(this);
         LocationUtil.getInstance().init(this);
+        MainServerConnector.getInstance().setAssetManager(this.getAssets());
 
         Log.d(LOG_TAG, this.getClass().getSimpleName() + " init.");
 

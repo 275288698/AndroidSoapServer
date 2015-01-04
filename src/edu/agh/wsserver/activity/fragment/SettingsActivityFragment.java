@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.agh.wsserver.activity.R;
+import edu.agh.wsserver.mainserver.MainServerConnector;
 import edu.agh.wsserver.settings.ServerSettings;
 
 public class SettingsActivityFragment extends Fragment {
@@ -82,6 +83,7 @@ public class SettingsActivityFragment extends Fragment {
 					ServerSettings.getInstance().setMainServerPortNumber(mainServerPortNr);
 				}
 
+				MainServerConnector.getInstance().establishConnectionWithServer();
 				applyChanges.setEnabled(false);
 			}
 		});

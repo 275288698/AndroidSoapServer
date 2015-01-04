@@ -16,6 +16,7 @@ public class ServerRunner implements Runnable {
 	public native boolean stopServer();
 
 	private native int setServerPort(int port);
+
 	private native int setServerThreadsPoolSize(int size);
 
 	private native int setAssetManager(AssetManager assetManager);
@@ -38,11 +39,11 @@ public class ServerRunner implements Runnable {
 			Log.i(LOG_TAG, "Server stopped properly.");
 		}
 	}
-	
+
 	public int getCurrentServerPort() {
 		return this.currentServerPort;
 	}
-	
+
 	public void setCurrentServerPort(int serverPort) {
 		this.currentServerPort = serverPort;
 		setServerPort(serverPort);
