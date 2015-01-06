@@ -8,7 +8,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Fragment;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.agh.wsserver.activity.R;
+import edu.agh.wsserver.mainserver.MainServerConnector;
 import edu.agh.wsserver.settings.ServerSettings;
 import edu.agh.wsserver.soap.ServerRunner;
 import edu.agh.wsserver.utils.ServerUtils;
@@ -56,10 +56,16 @@ public class ServerActivityFragment extends Fragment {
 			public void onClick(View v) {
 				startServerButton.setEnabled(true);
 				stopServerButton.setEnabled(false);
-				
+
+				String mainServerIp = ServerSettings.getInstance().getMainServerIpAddress();
+				boolean canDeregisterFromMainServer = mainServerIp != null && !"".equals(mainServerIp);
+				if (!"ERROR".equals(ipAddressText.getText()) && canDeregisterFromMainServer) {
+					MainServerConnector.getInstance().stopConnectionWithMainServer();
+				}
+
 				ipAddressText.setText(v.getResources().getString(R.string.ip_number));
 				portTextView.setText(v.getResources().getString(R.string.port_number));
-				
+
 				Log.i(LOG_TAG, "Trying to STOP server.");
 				serverRunner.stopServer();
 				isRunning = false;
@@ -72,9 +78,17 @@ public class ServerActivityFragment extends Fragment {
 				if (currentTask == null || currentTask.isDone()) {
 					stopServerButton.setEnabled(true);
 					startServerButton.setEnabled(false);
-					new GetLocalIpTask(ipAddressText).execute();
+					String localIp = ServerUtils.getLocalIP();
+					ipAddressText.setText(localIp);
 					portTextView.setText(String.valueOf(ServerSettings.getInstance().getServerPortNumber()));
-					
+
+					String mainServerIp = ServerSettings.getInstance().getMainServerIpAddress();
+					boolean canRegisterToMainServer = mainServerIp != null && !"".equals(mainServerIp);
+					if (!"ERROR".equals(localIp) && canRegisterToMainServer) {
+						MainServerConnector.getInstance().establishConnectionWithServer(localIp,
+								String.valueOf(ServerSettings.getInstance().getServerPortNumber()));
+					}
+
 					Log.i(LOG_TAG, "Trying to RUN server.");
 					serverRunner.setCurrentServerPort(ServerSettings.getInstance().getServerPortNumber());
 					serverRunner.setThreadsPoolSize(ServerSettings.getInstance().getNumberOfThreads());
@@ -89,7 +103,7 @@ public class ServerActivityFragment extends Fragment {
 		if (isRunning) {
 			stopServerButton.setEnabled(true);
 			startServerButton.setEnabled(false);
-			new GetLocalIpTask(ipAddressText).execute();
+			ipAddressText.setText(ServerUtils.getLocalIP());
 			portTextView.setText(String.valueOf(serverRunner.getCurrentServerPort()));
 		} else {
 			stopServerButton.setEnabled(false);
@@ -109,24 +123,6 @@ public class ServerActivityFragment extends Fragment {
 		field.set(null, newValue);
 	}
 
-	public static class GetLocalIpTask extends AsyncTask<Void, Void, String> {
-		private TextView textView;
-
-		public GetLocalIpTask(TextView textViewToUpdate) {
-			this.textView = textViewToUpdate;
-		}
-
-		@Override
-		protected String doInBackground(Void... params) {
-			return ServerUtils.getLocalIP();
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			textView.setText(result);
-		}
-	}
-
 	public ServerRunner getServerRunner() {
 		return this.serverRunner;
 	}
@@ -134,6 +130,7 @@ public class ServerActivityFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		if (serverRunner != null) {
+			MainServerConnector.getInstance().stopConnectionWithMainServer();
 			serverRunner.stopServer();
 			es.shutdown();
 			try {

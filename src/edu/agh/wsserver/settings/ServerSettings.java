@@ -63,7 +63,7 @@ public class ServerSettings {
 
 	public void setMainServerIpAddress(String mainServerIpAddress) {
 		this.mainServerIpAddress = mainServerIpAddress;
-		Log.d(LOG_TAG, "Main server ip address has been changed: " + mainServerIpAddress);
+		Log.d(LOG_TAG, "Main server ip address has been changed to: " + mainServerIpAddress);
 	}
 
 	public int getMainServerPortNumber() {
@@ -72,6 +72,6 @@ public class ServerSettings {
 
 	public void setMainServerPortNumber(int mainServerPortNumber) {
 		this.mainServerPortNumber = mainServerPortNumber;
-		Log.d(LOG_TAG, "Main server port number has been changed: " + mainServerPortNumber);
+		Log.d(LOG_TAG, "Main server port number has been changed to: " + mainServerPortNumber);
 	}
 }

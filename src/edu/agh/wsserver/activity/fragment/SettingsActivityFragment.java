@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.agh.wsserver.activity.R;
-import edu.agh.wsserver.mainserver.MainServerConnector;
 import edu.agh.wsserver.settings.ServerSettings;
 
 public class SettingsActivityFragment extends Fragment {
@@ -83,7 +82,6 @@ public class SettingsActivityFragment extends Fragment {
 					ServerSettings.getInstance().setMainServerPortNumber(mainServerPortNr);
 				}
 
-				MainServerConnector.getInstance().establishConnectionWithServer();
 				applyChanges.setEnabled(false);
 			}
 		});
@@ -109,10 +107,7 @@ public class SettingsActivityFragment extends Fragment {
 	}
 
 	private boolean validateIpAddress(EditText field) {
-		if (field.getText().toString().length() <= 0) {
-			field.setError("Field cannot be empty!");
-			return false;
-		} else {
+		if (field.getText().toString().length() > 0) {
 			String[] ipParts = field.getText().toString().split("\\.");
 			if (ipParts.length != 4 || field.getText().toString().endsWith(".")) {
 				field.setError("IP address has invalid format.");
