@@ -24,9 +24,9 @@ import edu.agh.wsserver.settings.ServerSettings;
 
 public class MainServerConnector {
 	public static final String LOG_TAG = MainServerConnector.class.getSimpleName();
-	private static final String REGISTER_SERVLET = "/Server4AndroidSoapServer/register";
-	private static final String DEREGISTER_SERVLET = "/Server4AndroidSoapServer/deregister";
-	private static final String PING_SERVLET = "/Server4AndroidSoapServer/ping";
+	private static final String REGISTER_SERVLET = "/Server4AndroidSoapServer/rest/register";
+	private static final String DEREGISTER_SERVLET = "/Server4AndroidSoapServer/rest/deregister";
+	private static final String PING_SERVLET = "/Server4AndroidSoapServer/rest/ping";
 	private static final String WSDL_FILE_NAME = "DeviceServices.wsdl";
 	private static final String TOKEN_HEADER = "deviceToken";
 	private static final String IP_HEADER = "deviceIp";
