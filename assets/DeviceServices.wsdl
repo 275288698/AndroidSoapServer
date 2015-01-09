@@ -39,6 +39,12 @@
      <element name="mMinDelay" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mMinDelay -->
    </sequence>
   </complexType>
+  <complexType name="Message"><!-- ns__Message -->
+
+   <sequence>
+     <element name="message" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__Message::message -->
+   </sequence>
+  </complexType>
   <!-- operation request element -->
   <element name="getAvailableSensorsInfo">
    <complexType>
@@ -70,6 +76,22 @@
     </sequence>
    </complexType>
   </element>
+  <!-- operation request element -->
+  <element name="logMessage">
+   <complexType>
+    <sequence>
+     <element name="message" type="ns:Message" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__logMessage::message -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="Confirmation">
+   <complexType>
+    <sequence>
+     <element name="ok" type="xsd:boolean" minOccurs="1" maxOccurs="1"/><!-- ns__Confirmation::ok -->
+    </sequence>
+   </complexType>
+  </element>
  </schema>
 
 </types>
@@ -90,6 +112,14 @@
  <part name="Body" element="ns:Location"/><!-- ns__getCurrentDeviceLocation::location -->
 </message>
 
+<message name="logMessage">
+ <part name="Body" element="ns:logMessage"/><!-- ns__logMessage::ns__logMessage -->
+</message>
+
+<message name="Confirmation">
+ <part name="Body" element="ns:Confirmation"/><!-- ns__logMessage::confirmation -->
+</message>
+
 <portType name="DeviceServicesPortType">
  <operation name="getAvailableSensorsInfo">
   <documentation>Service definition of function ns__getAvailableSensorsInfo</documentation>
@@ -100,6 +130,11 @@
   <documentation>Service definition of function ns__getCurrentDeviceLocation</documentation>
   <input message="tns:getCurrentDeviceLocation"/>
   <output message="tns:Location"/>
+ </operation>
+ <operation name="logMessage">
+  <documentation>Service definition of function ns__logMessage</documentation>
+  <input message="tns:logMessage"/>
+  <output message="tns:Confirmation"/>
  </operation>
 </portType>
 
@@ -123,10 +158,19 @@
      <SOAP:body parts="Body" use="literal"/>
   </output>
  </operation>
+ <operation name="logMessage">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
 </binding>
 
 <service name="DeviceServices">
- <documentation>gSOAP 2.8.17r generated service definition</documentation>
+ <documentation>gSOAP 2.8.21 generated service definition</documentation>
  <port name="DeviceServices" binding="tns:DeviceServices">
   <SOAP:address location="http://localhost:8080"/>
  </port>

@@ -127,13 +127,7 @@ int runServerWithoutThreadPool() {
 			}
 			pthread_create(&tid, NULL, (void*(*)(void*))process_request, (void*)tsoap);
 		}
-//		else {
-//			sprintf(buff, "soap_accept() returned: %d. It could be caused by accept_timeout.", s);
-//			logD(buff);
-//		}
 	}
-//	soap_destroy(&soap);
-//	soap_end(&soap);
 	soap_done(&soap); // detach soap struct
 	logI("GSoap server stopped gracefully.");
 	serverStopped = true;
@@ -184,9 +178,6 @@ int runServerWithThreadPool() {
 					logW(soapFaultBuff);
 					continue; // retry
 				} else {
-//					sprintf(buff, "Server timed out");
-//					logW(buff);
-//					break;
 					continue;
 				}
 			}
@@ -214,15 +205,11 @@ int runServerWithThreadPool() {
 	}
 	for (i = 0; i < localThreadsPoolSize; i++) {
 		if (soap_thr[i]) {
-//			soap_destroy(soap_thr[i]);
-//			soap_end(soap_thr[i]);
 			soap_done(soap_thr[i]); // detach context
 			free(soap_thr[i]); // free up
 		}
 	}
 
-//	soap_destroy(&soap);
-//	soap_end(&soap);
 	soap_done(&soap); // detach soap struct
 	logI("GSoap server stopped gracefully.");
 	serverStopped = true;
@@ -404,6 +391,22 @@ SOAP_FMAC5 int SOAP_FMAC6 ns__getCurrentDeviceLocation(struct soap* soap, void *
 	}
 	location->latitude = result->latitude;
 	location->longitude = result->longitude;
+	return SOAP_OK;
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 ns__logMessage(struct soap* soap, struct ns__Message *message, struct ns__Confirmation *confirmation) {
+	if (message == NULL || message->message == NULL) {
+		return soap_receiver_fault(soap, "Cannot log NULL message", "Sent message is NULL.");
+	}
+	char* msg = (char*) malloc(strlen(message->message) + 12 + 1);
+	if (msg == NULL) {
+		return soap_receiver_fault(soap, "Internal server error", "Internal server error.");
+	}
+	strcpy(msg, "LogService: ");
+	strcat(msg, message->message);
+	logI(msg);
+	free(msg);
+	confirmation->ok = true;
 	return SOAP_OK;
 }
 

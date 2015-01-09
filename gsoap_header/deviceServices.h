@@ -29,5 +29,16 @@ struct ns__Location
 	double latitude;
 };
 
+struct ns__Message
+{
+	char*   message;
+};
+
+struct ns__Confirmation
+{
+	bool 	ok;
+};
+
 int ns__getAvailableSensorsInfo(void *_, struct ns__SensorArray *sensors);
 int ns__getCurrentDeviceLocation(void *_, struct ns__Location *location);
+int ns__logMessage(struct ns__Message *message, struct ns__Confirmation *confirmation);

@@ -22,6 +22,12 @@
      <element name="mMinDelay" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- ns__Sensor::mMinDelay -->
    </sequence>
   </complexType>
+  <complexType name="Message"><!-- ns__Message -->
+
+   <sequence>
+     <element name="message" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__Message::message -->
+   </sequence>
+  </complexType>
   <!-- operation request element -->
   <element name="getAvailableSensorsInfo">
    <complexType>
@@ -50,6 +56,22 @@
     <sequence>
      <element name="longitude" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__Location::longitude -->
      <element name="latitude" type="xsd:double" minOccurs="1" maxOccurs="1"/><!-- ns__Location::latitude -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="logMessage">
+   <complexType>
+    <sequence>
+     <element name="message" type="ns:Message" minOccurs="0" maxOccurs="1" nillable="true"/><!-- ns__logMessage::message -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="Confirmation">
+   <complexType>
+    <sequence>
+     <element name="ok" type="xsd:boolean" minOccurs="1" maxOccurs="1"/><!-- ns__Confirmation::ok -->
     </sequence>
    </complexType>
   </element>
